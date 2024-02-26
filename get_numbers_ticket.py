@@ -21,3 +21,4 @@ def get_numbers_ticket(min, max, quantity):
     result_list = list(result)
     result_list.sort()
     return result
+
