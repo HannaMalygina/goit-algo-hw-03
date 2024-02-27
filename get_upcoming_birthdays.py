@@ -4,15 +4,15 @@ from datetime import datetime, timedelta
 def get_upcoming_birthdays(users):
     congratulation_list = []
     today = datetime.today().date()
-    this_year = today.year 
     for user in users:
         birthdate = datetime.strptime(user["birthday"], "%Y.%m.%d").date()
-        birthdate_this_year = datetime(year = this_year, month = birthdate.month, day = birthdate.day).date()
+        birthdate_this_year = birthdate.replace(year = today.year)
         congratulation_date = today
-        
+
+        #if birthday already, passed go to the next year 
         if (birthdate_this_year < today-timedelta(days=2)): 
-            birthdate_this_year = datetime(year = this_year+1, month = birthdate.month, day = birthdate.day).date()
-            congratulation_date = birthdate_this_year
+            congratulation_date = birthdate.replace(year = today.year+1)
+        #if birthday was last weekend and today is monday
         elif (birthdate_this_year == today-timedelta(days=2) or (birthdate_this_year == today-timedelta(days=1))) and today.weekday() == 0:
             congratulation_date = today
         else:
@@ -22,7 +22,6 @@ def get_upcoming_birthdays(users):
                 congratulation_date = birthdate_this_year + timedelta(days=1)
             else:
                 congratulation_date = birthdate_this_year
-        print(f"{congratulation_date = }")
         if (today + timedelta(days=7) > congratulation_date):
             congratulation_list.append({"name": user["name"], "congratulation_date" : congratulation_date.strftime("%Y.%m.%d")})
 
